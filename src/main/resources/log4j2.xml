@@ -7,11 +7,21 @@
         <Console name="ConsoleLog" target="SYSTEM_OUT">
             <PatternLayout pattern="${LOG_PATTERN}" charset="UTF-8"/>
         </Console>
+       <RollingFile name="FileLog"
+                    fileName="./logs/webchat.log"
+                    filePattern="./logs/webchat-%d{yyyy-MM-dd}-%i.log">
+           <PatternLayout pattern="${LOG_PATTERN}" charset="UTF-8" />
+           <Policies>
+               <TimeBasedTriggeringPolicy interval="1" />
+               <SizeBasedTriggeringPolicy size="10000KB" />
+           </Policies>
+           <DefaultRolloverStrategy max="20" fileIndex="min" />
+       </RollingFile>
     </Appenders>
-    <Loggers>
+   <Loggers>
         <Root level="info">
             <AppenderRef ref="ConsoleLog" />
-            <AppenderRef ref="FileLog" />
+           <AppenderRef ref="FileLog" />
         </Root>
     </Loggers>
 </Configuration>

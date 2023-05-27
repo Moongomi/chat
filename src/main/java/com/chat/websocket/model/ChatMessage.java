@@ -1,6 +1,5 @@
 package com.chat.websocket.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +9,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ChatMessage {
+
     private MessageType type;
     private String content;
     private String sender;
+    private int roomid;
 
     public enum MessageType {
         CHAT,
@@ -21,9 +22,10 @@ public class ChatMessage {
     }
 
     @Builder
-    public ChatMessage(MessageType type, String content, String sender) {
+    public ChatMessage(MessageType type, String content, String sender,int roomid) {
         this.type = type;
         this.content = content;
         this.sender = sender;
+        this.roomid = roomid;
     }
 }

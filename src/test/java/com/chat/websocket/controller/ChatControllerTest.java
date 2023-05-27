@@ -29,8 +29,10 @@ public class ChatControllerTest {
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setSender("John");
         chatMessage.setContent("Hello World");
+        
+        String id = "1";
 
-        ChatMessage result = chatController.sendMessage(chatMessage);
+        ChatMessage result = chatController.sendMessage(id,chatMessage);
 
         assertEquals(chatMessage, result);
     }
@@ -43,7 +45,9 @@ public class ChatControllerTest {
 
         when(headerAccessor.getSessionAttributes()).thenReturn(new HashMap<>());
 
-        ChatMessage result = chatController.addUser(chatMessage, headerAccessor);
+        String id = "1";
+
+        ChatMessage result = chatController.addUser(id,chatMessage, headerAccessor);
 
         assertEquals(chatMessage, result);
         assertEquals("John", headerAccessor.getSessionAttributes().get("username"));
