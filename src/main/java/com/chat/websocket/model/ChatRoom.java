@@ -23,4 +23,8 @@ public class ChatRoom {
     public boolean isEmpty(){
         return sessions.isEmpty();
     }
+
+    public int getClientCount() {
+        return sessions.size();
+    }
 }

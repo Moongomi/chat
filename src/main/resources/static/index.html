@@ -26,10 +26,10 @@
 
     <div id="roomname-page" class="hidden">
         <div class="roomname-page-container">
-            <h1 class="title">Type roomname</h1>
+            <h1 class="title">Type roomname or roomid</h1>
             <form id="roomnameForm" name="roomnameForm">
                 <div class="form-group">
-                    <input type="text" id="rname" placeholder="Roomname" autocomplete="off" class="form-control" />
+                    <input type="text" id="rname" placeholder="Roomname/Roomid" autocomplete="off" class="form-control" />
                 </div>
                 <div class="form-group">
                     <button id="room-create" type="submit" class="accent roomname-submit">Create Room</button>
@@ -43,7 +43,7 @@
     <div id="chat-page" class="hidden">
         <div class="chat-container">
             <div class="chat-header">
-                <h2>Spring WebSocket Chat Demo</h2>
+                <h2 id="chat-header-title">Spring WebSocket Chat Demo</h2>
             </div>
             <div class="connecting">
                 Connecting...

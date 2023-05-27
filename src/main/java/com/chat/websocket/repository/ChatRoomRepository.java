@@ -43,4 +43,13 @@ public class ChatRoomRepository {
 
         return room;
     }
+
+    public int getSessionCount(String roomid){
+        ChatRoom room = findRoomById(roomid);
+        return room.getClientCount();
+    }
+
+    public boolean isChatRoomNull(ChatRoom chatRoom){
+        return chatRoom == null;
+    }
 }

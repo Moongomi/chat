@@ -64,11 +64,58 @@ async function createRoom(event) {
       if (response.ok) {
         roomnamePage.classList.add("hidden");
         chatPage.classList.remove("hidden");
+        document.getElementById("chat-header-title").innerText = "Welcome to " + roomname;
 
         const roomData = await response.json();
         roomid = roomData.roomid;
-        console.log("Room created successfully.");
-        console.log('response data :',roomid);
+
+        var socket = new SockJS("/ws");
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, () => onConnected(roomid), onError);
+
+      } else {
+        console.error("Error creating room: ", response.statusText);
+        // Handle any errors during room creation
+      }
+    } catch (error) {
+      console.error("Error creating room: ", error);
+      // Handle any errors during room creation
+    }
+  }
+  
+}
+
+function listRooms() {
+  // List rooms logic goes here
+  console.log("List rooms button clicked");
+}
+
+async function enterRoom() {
+  event.preventDefault();
+  // Room creation logic goes here
+  roomid = document.querySelector("#rname").value.trim();
+  console.log("Roomid : ",roomid);
+
+  if (roomid) {
+    try {
+      const response = await fetch(`/chat/join?roomid=${roomid}`, {
+        method: "POST", // or 'PUT'
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        roomnamePage.classList.add("hidden");
+        chatPage.classList.remove("hidden");
+
+        const roomData = await response.json();
+        document.getElementById("chat-header-title").innerText = "Welcome to " + roomData.name;
+
+        
+        //roomid = roomData.roomid;
+        //console.log("Room created successfully.");
+        //console.log('response data :',roomid);
 
         var socket = new SockJS("/ws");
         stompClient = Stomp.over(socket);
@@ -87,17 +134,6 @@ async function createRoom(event) {
       // Handle any errors during room creation
     }
   }
-  
-}
-
-function listRooms() {
-  // List rooms logic goes here
-  console.log("List rooms button clicked");
-}
-
-function enterRoom() {
-  // Enter room logic goes here
-  console.log("Enter room button clicked");
 }
 
 function onConnected(roomid) {
@@ -147,12 +183,15 @@ function onMessageReceived(payload) {
 
   if (message.type === "JOIN") {
     messageElement.classList.add("event-message");
-    message.content = message.sender + " joined!";
+    message.content = message.sender + " joined! ";
   } else if (message.type === "LEAVE") {
     messageElement.classList.add("event-message");
     message.content = message.sender + " left!";
   } else {
     messageElement.classList.add("chat-message");
+
+    
+
 
     var avatarElement = document.createElement("i");
     var avatarText = document.createTextNode(message.sender[0]);
