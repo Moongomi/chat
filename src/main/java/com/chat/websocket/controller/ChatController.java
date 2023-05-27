@@ -12,13 +12,6 @@ import com.chat.websocket.model.ChatMessage;
 @Controller
 public class ChatController {
 
-    // @Autowired
-    // private final SimpMessagingTemplate template;
-
-    // public ChatController(SimpMessagingTemplate template) {
-    //     this.template = template;
-    // }
-
     @MessageMapping("/chat/sendMessage/{roomId}")
     @SendTo("/topic/public/{roomId}")
     public ChatMessage sendMessage(@DestinationVariable String roomId,@Payload ChatMessage chatMessage) {
@@ -27,8 +20,6 @@ public class ChatController {
         if (answer.equals(content)) {
             chatMessage.setContent("정답입니다");
         }
-
-        //template.convertAndSend("/topic/public", answer, null, null);
         return chatMessage;
     }
 

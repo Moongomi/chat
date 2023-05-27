@@ -12,6 +12,7 @@ var connectingElement = document.querySelector(".connecting");
 var stompClient = null;
 var username = null;
 var roomname = null;
+var roomid = null;
 
 var colors = [
   "#2196F3",
@@ -63,14 +64,17 @@ async function createRoom(event) {
       if (response.ok) {
         roomnamePage.classList.add("hidden");
         chatPage.classList.remove("hidden");
+
+        const roomData = await response.json();
+        roomid = roomData.roomid;
         console.log("Room created successfully.");
-        console.log(response);
+        console.log('response data :',roomid);
 
         var socket = new SockJS("/ws");
         stompClient = Stomp.over(socket);
 
         //stompClient.connect({}, onConnected(roomname), onError);
-        stompClient.connect({}, () => onConnected(roomname), onError);
+        stompClient.connect({}, () => onConnected(roomid), onError);
 
 
         // Perform any required actions upon successful room creation
@@ -96,14 +100,15 @@ function enterRoom() {
   console.log("Enter room button clicked");
 }
 
-function onConnected(roomname) {
+function onConnected(roomid) {
   // Subscribe to the Public Topic
   //stompClient.subscribe("/topic/public", onMessageReceived);
-  stompClient.subscribe("/topic/public/" + roomname, onMessageReceived);
+  console.log('onConnected roomid : ',roomid);
+  stompClient.subscribe("/topic/public/" + roomid, onMessageReceived);
 
   // Tell your username to the server
   stompClient.send(
-    "/app/chat/addUser/"+roomname,
+    "/app/chat/addUser/"+roomid,
     {},
     JSON.stringify({ sender: username, type: "JOIN" })
   );
@@ -117,7 +122,7 @@ function onError(error) {
   connectingElement.style.color = "red";
 }
 
-function sendMessage(event, roomname) {
+function sendMessage(event, roomid) {
   var messageContent = messageInput.value.trim();
   if (messageContent && stompClient) {
     var chatMessage = {
@@ -126,7 +131,7 @@ function sendMessage(event, roomname) {
       type: "CHAT",
     };
     stompClient.send(
-      "/app/chat/sendMessage/"+roomname,
+      "/app/chat/sendMessage/"+roomid,
       {},
       JSON.stringify(chatMessage)
     );
@@ -185,7 +190,7 @@ usernameForm.addEventListener("submit", connect, true);
 //messageForm.addEventListener("submit", sendMessage, true);
 messageForm.addEventListener(
   "submit",
-  (event) => sendMessage(event, roomname),
+  (event) => sendMessage(event, roomid),
   true
 );
 
